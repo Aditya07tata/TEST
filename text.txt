@@ -1,0 +1,633 @@
+<%@ Page Language="C#" AutoEventWireup="true" CodeFile="ActualAnaplanDashboard.aspx.cs" Inherits="ActualAnaplanDashboard" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server" id="Head1">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <link rel="Shortcut Icon" href="Images/favicon.ico" />
+    <title>Anaplan Actuals</title>
+    <link href="styles/bootstrap.min.css" rel="stylesheet" />
+    <link href="styles/font-awesome.min.css" rel="stylesheet" />
+    <link href="plugins/Simple-Line-Icons/simple-line-icons.css" rel="stylesheet" />
+    <link href="styles/style.css" rel="stylesheet" />
+    <link href="styles/preload.css" rel="stylesheet" />
+    <!--[if lt IE 9]>
+    <link href="styles/ie8_skin.css" rel="stylesheet" />
+    <![endif]-->
+    <!--[if !IE | gte IE 9]><!-->
+    <link href="styles/skin.css" rel="stylesheet" />
+    <!--<![endif]-->
+    <%--<link href="styles/AdminLTE.min.css" rel="stylesheet" />--%>
+    <link href="styles/app.css" rel="stylesheet" />
+    <link href="styles/site_error.css" rel="stylesheet" type="text/css" />
+
+    <link href="styles/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="styles/bootstrap-multiselect.css" rel="stylesheet" />
+    <%-- <link href="styles/bootstrap-multiselect.css" rel="stylesheet" />--%>
+    <link href="plugins/Bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link href="styles/sweetalert2.css" rel="stylesheet" />
+    <link href="plugins/jsTree/jstree.min.css" rel="stylesheet" type="text/css" />
+    <!-- Checkbox plugin -->
+    <link href="plugins/iCheck/blue.css" rel="stylesheet" />
+    <link href="plugins/full-overlay/style3.css" rel="stylesheet" />
+    <link href="plugins/full-overlay/styleLogin.css" rel="stylesheet" />
+    <link href="plugins/Toastr/toastr.css" rel="stylesheet" />
+    <link href="plugins/summernote/summernote.css" rel="stylesheet" />
+    <link href="styles/sweetalert2.css" rel="stylesheet" />
+
+    <!-- HTML5 shiv and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="scripts/html5shiv.js"></script>
+      <script src="scripts/respond.min.js"></script>
+        <script src="scripts/excanvas.min.js"></script>
+    <![endif]-->
+    <script src="scripts/jquery-2.1.1.min.js"></script>
+    <script src="scripts/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
+    <script src="scripts/bootstrap-multiselect.js"></script>
+    <script src="scripts/bootstrap-select.min.js"></script>
+    <script src="scripts/jquery.cookie.js" type="text/javascript"></script>
+    <script src="scripts/jquery.sessionTimeout.js"></script>
+    <script src="scripts/jquery.blockui.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="scripts/app.js"></script>
+    <script src="plugins/Bootstrap-datetimepicker/js/moment.js"></script>
+    <script src="plugins/Bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="scripts/sweetalert2.min.js"></script>
+    <script src="plugins/jsTree/jstree.min.js" type="text/javascript"></script>
+    <script src="plugins/iCheck/icheck.min.js"></script>
+    <%--<script src="scripts/jquery.slimscroll.min.js"></script>--%>
+    <script src="scripts/jquery.nicescroll.min.js"></script>
+    <script src="plugins/Toastr/toastr.js"></script>
+    <script src="plugins/summernote/summernote.min.js"></script>
+    <link href="styles/right-sidebar.css" rel="stylesheet" />
+    <script src="scripts/validator.min.js"></script>
+    <script src="scripts/jquery.maskedinput.min.js"></script>
+    <script src="scripts/sweetalert2.min.js"></script>
+
+    <style>
+        .navbar-nav > .user-menu > .dropdown-menu > li.user-header {
+            height: 175px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        li.user-header {
+            background-color: #5C9BD1;
+        }
+
+        .navbar-nav > .user-menu > .dropdown-menu > li.user-header > img {
+            z-index: 5;
+            height: 90px;
+            width: 90px;
+            border: 3px solid;
+            border-color: transparent;
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .navbar-nav > .user-menu > .dropdown-menu > li.user-header > p {
+            z-index: 5;
+            color: #fff;
+            color: rgba(255,255,255,0.8);
+            font-size: 17px;
+            margin-top: 10px;
+        }
+
+        .navbar-nav > .user-menu > .dropdown-menu > .user-body {
+            height: 55px;
+            padding: 10px;
+            border-bottom: 1px solid #f4f4f4;
+            border-top: 1px solid #dddddd;
+        }
+
+        .navbar-nav > .user-menu > .dropdown-menu, .navbar-nav > .user-menu > .dropdown-menu > .user-body {
+            border-bottom-right-radius: 4px;
+            border-bottom-left-radius: 4px;
+        }
+
+            .navbar-nav > .user-menu > .dropdown-menu > .user-body:before, .navbar-nav > .user-menu > .dropdown-menu > .user-body:after {
+                content: " ";
+                display: table;
+            }
+
+            .navbar-nav > .user-menu > .dropdown-menu > .user-footer:before, .navbar-nav > .user-menu > .dropdown-menu > .user-footer:after {
+                content: " ";
+                display: table;
+            }
+
+            .navbar-nav > .user-menu > .dropdown-menu > .user-footer {
+                background-color: #f9f9f9;
+                padding: 10px;
+            }
+
+        <link href="plugins/Bootstrap-Slider/bootstrap-slider.min.css" rel="stylesheet" type="text/css" / > <link href="styles/bootstrap-select.min.css" rel="stylesheet" / > <script src="plugins/Bootstrap-Slider/bootstrap-slider.min.js" type="text/javascript" > </script > <script src="scripts/bootstrap-select.min.js" type="text/javascript" > </script > <link href="plugins/fileupload/jquery.fileupload.css" rel="stylesheet" / > <script src="plugins/fileupload/jquery.ui.widget.js" > </script > <script src="plugins/fileupload/jquery.fileupload.js" > </script > <script src="plugins/Bootstrap-Slider/bootstrap-slider.min.js" type="text/javascript" > </script > <script src="plugins/Datatables/DataTables-1.10.18/js/jquery.dataTables.min.js" > </script > <script src="plugins/Datatables/Responsive-2.2.2/js/dataTables.responsive.min.js" > </script > <script src="plugins/DataTables/Buttons-1.5.2/js/dataTables.buttons.min.js" > </script > <script src="plugins/DataTables/JSZip-2.5.0/jszip.min.js" > </script > <script src="plugins/DataTables/pdfmake-0.1.36/pdfmake.min.js" > </script > <script src="plugins/DataTables/pdfmake-0.1.36/vfs_fonts.js" > </script > <script src="plugins/DataTables/Buttons-1.5.2/js/buttons.html5.min.js" > </script > <script src="plugins/DataTables/FixedColumns-3.2.5/js/dataTables.fixedColumns.min.js" > </script > <script src="plugins/DataTables/Buttons-1.5.2/js/buttons.colVis.min.js" > </script > <link href="plugins/Bootstrap-Slider/bootstrap-slider.min.css" rel="stylesheet" type="text/css" / > <link href="plugins/Datatables/DataTables-1.10.18/css/jquery.dataTables.min.css" rel="stylesheet" / > <link href="plugins/Datatables/Responsive-2.2.2/css/responsive.dataTables.min.css" rel="stylesheet" / > <link href="plugins/DataTables/Buttons-1.5.2/css/buttons.dataTables.min.css" rel="stylesheet" / > <link href="plugins/DataTables/FixedColumns-3.2.5/css/fixedColumns.dataTables.min.css" rel="stylesheet" / > <link href="styles/Stylefont.css" rel="stylesheet" / > <style > .custom-tab {
+            margin-bottom: 15px;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .custom-tab > .nav-tabs {
+            border: none;
+            margin: 0;
+        }
+
+            .custom-tab > .nav-tabs > li.active > a, .custom-tab > .nav-tabs > li > a {
+                -webkit-border-radius: 0;
+                -moz-border-radius: 0;
+                -ms-border-radius: 0;
+                -o-border-radius: 0;
+            }
+
+            .custom-tab > .nav-tabs > li {
+                margin-right: 2px;
+                border-top: 2px solid transparent;
+            }
+
+                .custom-tab > .nav-tabs > li > a {
+                    margin-right: 0;
+                    border-radius: 0;
+                }
+
+                    .custom-tab > .nav-tabs > li > a:hover {
+                        background: 0 0;
+                        border-color: transparent;
+                    }
+
+                .custom-tab > .nav-tabs > li.active {
+                    border-top: 3px solid #ed6b75;
+                    margin-top: 0;
+                    position: relative;
+                }
+
+                    .custom-tab > .nav-tabs > li.active > a {
+                        border-top: none !important;
+                        font-weight: 400;
+                        border-radius: 0;
+                    }
+
+                        .custom-tab > .nav-tabs > li.active > a:hover {
+                            -webkit-border-radius: 0;
+                            -moz-border-radius: 0;
+                            -ms-border-radius: 0;
+                            -o-border-radius: 0;
+                            border-radius: 0;
+                            border-top: none;
+                            background: #fff;
+                            border-color: #d4d4d4 #d4d4d4 transparent;
+                        }
+
+        .custom-tab > .tab-content {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            -webkit-border-radius: 0 0 4px 4px;
+            -moz-border-radius: 0 0 4px 4px;
+            -ms-border-radius: 0 0 4px 4px;
+            -o-border-radius: 0 0 4px 4px;
+            border-radius: 0 0 4px 4px;
+        }
+
+        .custom-tab.nav-justified > .tab-content {
+            margin-top: -1px;
+        }
+
+        .custom-tab.boxless > .tab-content {
+            padding: 15px 0;
+            border-left: none;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .custom-tab.tabs-below.nav-justified .tab-content {
+            margin-top: 0;
+            margin-bottom: -2px;
+            -webkit-border-radius: 4px 4px 0 0;
+            -moz-border-radius: 4px 4px 0 0;
+            -ms-border-radius: 4px 4px 0 0;
+            -o-border-radius: 4px 4px 0 0;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .custom-tab.tabbable-full-width > .nav-tabs > li > a {
+            color: #424242;
+            font-size: 15px;
+            padding: 9px 15px;
+        }
+
+        .custom-tab.tabbable-full-width > .tab-content {
+            padding: 15px 0;
+            border-left: none;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .custom-tab.tabs-below .nav-tabs > li > a {
+            border-top: none;
+            border-bottom: 2px solid transparent;
+            margin-top: -1px;
+        }
+
+        .tabbable-line.tabs-below > .nav-tabs > li > a, .tabbable-line > .nav-tabs > li.open .dropdown-menu, .tabbable-line > .nav-tabs > li:hover .dropdown-menu {
+            margin-top: 0;
+        }
+
+        .custom-tab.tabs-below .nav-tabs > li.active {
+            border-top: none;
+            border-bottom: 3px solid #d12610;
+            margin-bottom: 0;
+            position: relative;
+        }
+
+            .custom-tab.tabs-below .nav-tabs > li.active > a {
+                border-bottom: none;
+            }
+
+                .custom-tab.tabs-below .nav-tabs > li.active > a:hover {
+                    background: #fff;
+                    border-color: #d4d4d4 #d4d4d4 transparent;
+                }
+
+        .custom-tab.tabbable-noborder .tab-content, .custom-tab.tabbable-noborder > .nav-tabs > li > a {
+            border: 0;
+        }
+
+        body {
+            font-family: Arial;
+            font-size: 10pt;
+        }
+
+        .ErrorControl {
+            background-color: #FBE3E4;
+            border: solid 1px Red;
+        }
+
+        .v1 {
+            float: left;
+            height: 600px;
+            width: 10px;
+            top: 0px;
+            bottom: inherit;
+            background-color: cornflowerblue;
+            /*height:auto;*/
+        }
+
+        .activeDiv {
+            display: inline-block;
+            padding-left: 50px;
+            padding-top: 20px;
+            width: 100%;
+            box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+            height: 300px;
+            background-color: #d0e0d0;
+        }
+
+        .inactiveDiv {
+            display: none;
+        }
+
+        .buttonwrap {
+            word-wrap: break-word;
+            vertical-align: top;
+            text-align: center;
+            padding: 2px;
+            padding-top: 15px;
+            margin: 2px;
+            color: black;
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        }
+
+            .buttonwrap:hover {
+                box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+                border: solid;
+                border-color: silver;
+                border-width: 3px;
+            }
+
+        body {
+            background: rgb(204,204,204);
+        }
+
+        page {
+            background: white;
+            display: block;
+            margin: 0 auto;
+            margin-bottom: 0.5cm;
+            box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+        }
+
+        page {
+            width: 21cm;
+            height: 29.7cm;
+        }
+        /*@media print{
+            .page{
+                
+                box-shadow: 0;
+            }
+        }*/
+        @page {
+            size: A4;
+        }
+
+        .multiselect-container {
+            width: 100% !important;
+        }
+
+        .error {
+            color: Red !important;
+            font-size: small !important;
+        }
+
+        .labelpadding {
+            padding-top: 8px;
+        }
+
+        label {
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body style="background-color: #f4f4f4">
+    <form id="form1" runat="server" class="page">
+        <asp:ScriptManager ID="ToolkitScriptManager1" runat="server">
+        </asp:ScriptManager>
+        <asp:UpdatePanel ID="updPnal1" runat="server" UpdateMode="Always">
+            <ContentTemplate>
+                <div class="control-panel-body">
+                    <nav class="navbar navbar-inverse navbar-fixed-top " style="height: 60px">
+                        <div class="container-fluid" style="height: 60px">
+                            <div class="navbar-header">
+                                <h2 class="control-label font-white bold" style="width: 600px; height: 60px">Anaplan Actuals</h2>
+                            </div>
+                            <ul class="nav navbar-nav pull-right">
+                                <li class="dropdown dropdown-user dropdown-notification dropdown-extended">
+                                    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" style="padding: 7px; 0px">
+                                        <img alt="User Image" onerror="this.src='Images/NoPicture.gif';" class="img-circle" src='<%="http://176.0.1.102/GIH001.ashx?pf=YY&cid=" + Session["CurrentUser"] %>' style="height: 45px;">
+                                        <span class="username username-hide-mobile">
+                                            <i class="fa fa-angle-down"></i>
+                                        </span>
+                                    </a>
+                                    <ul class="dropdown-menu" style="width: 250px; padding: 12px; box-shadow: 0 4px 0px 0 black, 0 4px 10px 0 !important;">
+                                        <!--1ST <li>: DEFINING THE FIRST KEY VALUE PAIR. HERE IT IS Employee Id-->
+                                        <li>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <small style="color: grey">
+                                                        <i class="fa fa-user"></i>
+                                                        <asp:Literal runat="server" Text="Pno:"></asp:Literal>
+                                                    </small>
+                                                </div>
+                                                <div class="col-md-7 text-left text-primary">
+                                                    <asp:Label ID="lblPno" runat="server" Text="" Font-Size="Small"></asp:Label>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <!--2ND <li>: DEFINING THE SECOND KEY VALUE PAIR. HERE IT IS Employee Name-->
+                                        <li class="divider"></li>
+                                        <li>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <small style="color: grey">
+                                                        <i class="fa fa-users"></i>
+                                                        <asp:Literal runat="server" Text="Name:"></asp:Literal>
+                                                    </small>
+                                                </div>
+                                                <div class="col-md-7 text-left text-primary">
+                                                    <small>
+                                                        <asp:Label ID="lblName" runat="server" Text="" Font-Size="Small" Style="overflow-wrap: break-word"></asp:Label>
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <!--3RD <li>: DEFINING THE SECOND KEY VALUE PAIR. HERE IT IS Employee Email Id-->
+                                        <li class="divider"></li>
+                                        <li>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <small style="color: grey">
+                                                        <i class="fa fa-envelope"></i>
+                                                        <asp:Literal runat="server" Text="Email:"></asp:Literal>
+                                                    </small>
+                                                </div>
+                                                <div class="col-md-7 text-left text-primary">
+                                                    <small>
+                                                        <asp:Label ID="lblEmailId" runat="server" Text="" Font-Size="Small" Style="overflow-wrap: break-word"></asp:Label>
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <br />
+                    <br />
+                    <div class="row" style="width: 100%; height: 100%">
+                        <div class="col-md-12" style="padding: 20px; margin: 20px; font-size: small; font-weight: bold; width: 100%">
+                            <div class="row marq__msg" style="padding: 5px 30px 5px 30px; margin: 3px;">
+                                <div class="col-md-12" style="vertical-align: bottom">
+                                    <marquee> <p style="color:#180b94;padding-left:10px;vertical-align:bottom">
+                           <asp:Label ID="lblMarquee" runat="server" ></asp:Label>
+                          </p></marquee>
+                                </div>
+                            </div>
+                            <form class="row gy-2">
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="lstBoxArea">Area:</label>
+                                        <div>
+                                            <asp:ListBox ID="lstBoxArea" runat="server" SelectionMode="Multiple" Width="100%" CssClass="multiselect-item divider" OnSelectedIndexChanged="lstBoxArea_SelectedIndexChanged" AutoPostBack="true"></asp:ListBox>
+                                            <asp:RequiredFieldValidator ID="rfvArea" runat="server" ControlToValidate="lstBoxArea" ValidationGroup="vgSave" ErrorMessage="*Required" Display="Dynamic" CssClass="error"></asp:RequiredFieldValidator>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="lstBoxProcessName" class="col-form-label">Process Name:</label>
+                                        <div class="col">
+                                            <asp:ListBox ID="lstBoxProcessName" runat="server" SelectionMode="Multiple" Width="100%" CssClass="multiselect-item divider"></asp:ListBox>
+                                            <asp:RequiredFieldValidator ID="rfvProcessName" runat="server" ControlToValidate="lstBoxProcessName" ValidationGroup="vgSave" ErrorMessage="*Required" Display="Dynamic" CssClass="error"></asp:RequiredFieldValidator>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label for="txtYear">Year:</label>
+                                        <div>
+                                            <asp:TextBox ID="txtYear" runat="server" CssClass="form-control date form_datetime" data-date-format="YYYY" placeholder="[Select]"></asp:TextBox>
+                                            <asp:RequiredFieldValidator ID="rfvYear" CssClass="error" runat="server" ErrorMessage="*Required" ControlToValidate="txtYear" Display="Dynamic" ValidationGroup="vgSave"></asp:RequiredFieldValidator>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label for="ddlMonth">Month:</label>
+                                        <div>
+                                            <asp:DropDownList ID="ddlMonth" runat="server" CssClass="form-control" Width="100%">
+                                                <asp:ListItem Text="[Select]" Value="0" />
+                                                <asp:ListItem Text="January" Value="Jan" />
+                                                <asp:ListItem Text="February" Value="Feb" />
+                                                <asp:ListItem Text="March" Value="Mar" />
+                                                <asp:ListItem Text="April" Value="Apr" />
+                                                <asp:ListItem Text="May" Value="May" />
+                                                <asp:ListItem Text="June" Value="Jun" />
+                                                <asp:ListItem Text="July" Value="Jul" />
+                                                <asp:ListItem Text="August" Value="Aug" />
+                                                <asp:ListItem Text="September" Value="Sep" />
+                                                <asp:ListItem Text="October" Value="Oct" />
+                                                <asp:ListItem Text="November" Value="Nov" />
+                                                <asp:ListItem Text="December" Value="Dec" />
+                                            </asp:DropDownList>
+                                            <asp:RequiredFieldValidator ID="rfvMonth" runat="server" ControlToValidate="ddlMonth" ErrorMessage="*Required" Display="Dynamic" CssClass="error" ValidationGroup="vgSave" InitialValue="0"></asp:RequiredFieldValidator>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">                                  
+                                    <div class="form-group col-md-3 col-md-offset-3" style="margin-top: 15px;">
+                                        <asp:LinkButton runat="server" ID="btnSave" OnClick="btnSave_Click" CssClass="btn" Width="95%" BackColor="#58883b" ForeColor="White" CausesValidation="true" ValidationGroup="vgSave"><i class="fa fa-save"></i> &nbsp; Save</asp:LinkButton>
+                                    </div>
+                                    <div class="form-group col-md-3" style="margin-top: 15px;">
+                                        <asp:LinkButton runat="server" ID="lnkBtnBotTrigger" CssClass="btn" Width="95%" BackColor="#e48a3c" ForeColor="White" OnClick="lnkBtnBotTrigger_Click"><i class="fa fa-android"></i> &nbsp; Trigger Bot</asp:LinkButton>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                    </div>
+                                </div>                              
+                                <div class="form-row">
+                                    <div class="col-md-12" style="margin-top: 15px;">
+                                        <asp:GridView ID="grdActualAnaplan" runat="server" AutoGenerateColumns="false" CssClass="display compact dataTable dtr-inline" Style="width: 100%">
+                                            <Columns>
+                                                <asp:TemplateField HeaderText="Area">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblArea" runat="server" Text='<%#Eval("Area") %>' Style="font-size: small;"></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="Process Name">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblProcessName" runat="server" Text='<%#Eval("Process Name") %>' Style="font-size: small;"></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="Task Name">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblEndDate" runat="server" Text='<%#Eval("Task Name") %>' Style="font-size: small;"></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="Year">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblYear" runat="server" Text='<%#Eval("Year") %>' Style="font-size: small;"></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="Month">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblMonth" runat="server" Text='<%#Eval("Month") %>' Style="font-size: small;"></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                                <asp:TemplateField HeaderText="Status">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblStatus" runat="server" Text='<%#Eval("Status") %>' Style="font-size: small;"></asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField> 
+                                                <asp:TemplateField HeaderText="Action">
+                                                    <ItemTemplate>
+                                                        <asp:Label ID="lblStatus" runat="server" Text='<%#Eval("Action") %>' Style="font-size: small;">Cancel</asp:Label>
+                                                    </ItemTemplate>
+                                                </asp:TemplateField>
+                                            </Columns>
+                                            <HeaderStyle CssClass="header" BackColor="#b2c1ea" ForeColor="#2e294e" VerticalAlign="Middle" HorizontalAlign="Center" Font-Size="13px" />
+                                            <RowStyle CssClass="gvItemStyle" />
+                                            <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" Font-Names="Small" />
+                                        </asp:GridView>
+                                    </div>
+                                </div>
+                            </form>
+                            <br />
+                            <br />
+                        </div>
+                    </div>
+            </ContentTemplate>
+        </asp:UpdatePanel>
+    </form>
+</body>
+<script type="text/javascript">
+    function pageLoad(sender, args) {
+        initializeFormControls();
+        initializeYearPicker();
+        multiselected();
+    };
+
+    function initializeFormControls() {
+    };
+
+    //$(document).ready(function () {
+    //    var pageURL = $(location).attr("href");
+    //    pageURL = pageURL.substring(0, pageURL.lastIndexOf('/') + 1);
+    //    var redirectPage = pageURL + "SessionExpire.aspx";
+    //    $.sessionTimeout({
+    //        warnAfter: 18 * 60 * 1000,   //warning popup 
+    //        message: 'Your Session will expire in ',
+    //        redirAfter: 20 * 60 * 1000,
+    //        redirUrl: redirectPage,
+    //        stayConnectedBtn: 'Stay connected',
+    //        keepAliveUrl: '/Test.aspx'
+    //    });
+    //});
+
+    function openLync(email) {
+        window.location = "sip:" + email;
+    }
+
+    function initializeYearPicker() {
+        $(".form_datetime").datetimepicker({
+            format: "yyyy",
+            autoClose: true,
+            minView: 4,
+            viewMode: "years",
+            minViewMode: "years"
+        });
+    };
+
+    function showWarningMessageBox(errorMessage) {
+        $('#valMessage').html(errorMessage);
+        $('#lnkBtnValErrors').click();
+    };
+    function closeModal() {
+        $('.modal').modal('hide');
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+        return true;
+    };
+
+    function showGenericMessageModal(type, message) {
+        swal('', message, type);
+    };
+
+
+    function multiselected() {
+        $(document).ready(function () {
+            $(function () {
+                $('[id*=lstBoxArea]').multiselect({
+                    includeSelectAllOption: true,
+                    nonSelectedText: 'None Selected',
+                    numberDisplayed: 1,
+                    buttonWidth: '100%',
+                    dropRight: true,
+                    maxHeight: 250,
+                    enableFiltering: true,
+                    allSelectedText: 'All Selected',
+                    enableCaseInsensitiveFiltering: true
+                });
+
+                $('[id*=lstBoxProcessName]').multiselect({
+                    includeSelectAllOption: true,
+                    nonSelectedText: 'None Selected',
+                    numberDisplayed: 1,
+                    buttonWidth: '100%',
+                    dropRight: true,
+                    maxHeight: 250,
+                    enableFiltering: true,
+                    allSelectedText: 'All Selected',
+                    enableCaseInsensitiveFiltering: true
+                });
+            });
+        });
+    };
+</script>
+</html>
