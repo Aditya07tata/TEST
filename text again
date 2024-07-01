@@ -247,4 +247,241 @@ public partial class ActualAnaplanDashboard : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            ShowGenericMessage
+            ShowGenericMessageModal(CommonConstants.ALERT_TYPE_ERROR, ex.Message);
+        }
+    }
+
+    // Excel read code
+    private DataSet Excel(string fname)
+    {
+        using (var pck = new OfficeOpenXml.ExcelPackage())
+        {
+            try
+            {
+                using (var stream = System.IO.File.Open(fname, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    pck.Load(stream);
+                }
+                var wss = pck.Workbook.Worksheets;
+
+                foreach (var ws in wss)
+                {
+                    DataTable tbl = new DataTable();
+                    bool hasHeader = true;
+                    string ErrorMessage = string.Empty;
+                    if (ws.Cells[1, 1].Value != null)
+
+                        foreach (var firstRowCell in ws.Cells[1, 1, 1, ws.Dimension.End.Column]) //header start at 2
+                        {
+                            tbl.Columns.Add(hasHeader ? firstRowCell.Text.Trim() : string.Format("Column {0}", firstRowCell.Start.Column));
+                        }
+                    if (tbl.Columns.Count > 0)
+                    {
+                        var startRow = hasHeader ? 2 : 1; //row start at 3
+                        for (var rowNum = startRow; rowNum <= ws.Dimension.End.Row; rowNum++)
+                        {
+                            var wsRow = ws.Cells[rowNum, 1, rowNum, tbl.Columns.Count];
+                            var row = tbl.NewRow();
+                            foreach (var cell in wsRow)
+                            {
+                                if (cell.Text != null)
+                                {
+                                    row[cell.Start.Column - 1] = cell.Text;
+                                }
+                            }
+                            tbl.Rows.Add(row);
+                            tbl.TableName = ws.Name;
+                        }
+                        ds = new DataSet();
+                        ds.Tables.Add(tbl);
+                    }
+                }
+            }
+            catch (Exception exp)
+            {
+
+            }
+            return ds;
+        }
+    }
+
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            string masterListPath = @"\\144.0.16.11\Input\ActualAnaplan\MasterData\MasterAnaplanList.xlsx";
+
+            List<string> lstSelectedArea = new List<string>();
+
+            foreach (var index in lstBoxArea.GetSelectedIndices())
+            {
+                lstSelectedArea.Add(lstBoxArea.Items[index].Value);
+            }
+
+            List<string> lstSelectedProcessName = new List<string>();
+
+            foreach (var index in lstBoxProcessName.GetSelectedIndices())
+            {
+                lstSelectedProcessName.Add(lstBoxProcessName.Items[index].Value);
+            }
+
+            if (File.Exists(masterListPath))
+            {
+                var dt = Excel(masterListPath).Tables[0].AsEnumerable()
+                                    .Where(row => lstSelectedArea.Contains(row.Field<string>("Area"))
+                                    && lstSelectedProcessName.Contains(row.Field<string>("Process Name"))).CopyToDataTable();
+
+                dt.Columns.Add("Year", typeof(int));
+                dt.Columns.Add("Month", typeof(string));
+                dt.Columns.Add("Status", typeof(string));
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    row["Year"] = txtYear.Text;
+                    row["Month"] = ddlMonth.SelectedValue;
+                    row["Status"] = "Inprogress";
+                }
+                SaveToExcel(dt);
+                ImportToGrid();
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowGenericMessageModal(CommonConstants.ALERT_TYPE_ERROR, ex.Message);
+        }
+    }
+
+    private void SaveToExcel(DataTable dtData)
+    {
+        try
+        {
+            string anaplanActualPath = @"\\144.0.16.11\Input\ActualAnaplan\Config\AnaplanBots.xlsx";
+
+            if (File.Exists(anaplanActualPath))
+            {
+                FileInfo fileInfo = new FileInfo(anaplanActualPath);
+                using (ExcelPackage print = new ExcelPackage(fileInfo))
+                {
+                    ExcelWorksheet myWorksheet = print.Workbook.Worksheets["Sheet1"];
+                    myWorksheet.InsertRow(2, dtData.Rows.Count);
+                    myWorksheet.Cells.LoadFromDataTable(dtData, true);
+                    print.Save();
+                    ShowGenericMessageModal(CommonConstants.ALERT_TYPE_SUCCESS, "Record Saved Successfully..!");
+                    clear();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowGenericMessageModal(CommonConstants.ALERT_TYPE_ERROR, ex.Message);
+        }
+    }
+
+    private void clear()
+    {
+        try
+        {
+            lstBoxArea.Items.Clear();
+            lstBoxProcessName.Items.Clear();
+            txtYear.Text = "";
+            ddlMonth.SelectedValue = "0";
+        }
+        catch (Exception ex)
+        {
+            ShowGenericMessageModal(CommonConstants.ALERT_TYPE_ERROR, ex.Message);
+        }
+    }
+
+    private void CommandBot(string command)
+    {
+        FileStream stream = null;
+        try
+        {
+            string fsPath = @"\\144.0.16.11\Input\ActualAnaplan\Command";
+            string filename = "Command.txt";
+            string sDir = fsPath + "\\" + filename;
+            if (!File.Exists(sDir))
+            {
+                stream = new FileStream(sDir, FileMode.OpenOrCreate);
+                using (StreamWriter writer = new StreamWriter(stream))
+                {
+                    writer.Write(command);
+                }
+            }
+            else
+                ShowGenericMessageModal(CommonConstants.ALERT_TYPE_INFO, "A bot is already running! Please wait for its completion!");
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+        finally
+        {
+            if (stream != null)
+                stream.Dispose();
+        }
+    }
+
+    protected void lnkBtnBotTrigger_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            string filePath = @"\\144.0.16.11\Input\ActualAnaplan\Command\Command.txt";
+            CommandBot("Run");
+            ShowGenericMessageModal(CommonConstants.ALERT_TYPE_SUCCESS, "Bot Triggered Successfully..!");
+            ToggleMarQuee(File.Exists(filePath));
+        }
+        catch (Exception ex)
+        {
+            ShowGenericMessageModal(CommonConstants.ALERT_TYPE_ERROR, ex.Message);
+        }
+    }
+
+    protected void btnCancel_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            Button btn = (Button)sender;
+            int rowIndex = int.Parse(btn.CommandArgument);
+
+            string anaplanBotPath = @"\\144.0.16.11\Input\ActualAnaplan\Config\AnaplanBots.xlsx";
+
+            if (File.Exists(anaplanBotPath))
+            {
+                FileInfo fileInfo = new FileInfo(anaplanBotPath);
+                using (ExcelPackage pck = new ExcelPackage(fileInfo))
+                {
+                    ExcelWorksheet ws = pck.Workbook.Worksheets[0]; // Assuming data is in the first worksheet
+                    DataTable dt = Excel(anaplanBotPath).Tables[0];
+
+                    // Clear data in the corresponding row
+                    foreach (DataColumn col in dt.Columns)
+                    {
+                        dt.Rows[rowIndex][col] = DBNull.Value;
+                    }
+
+                    // Save the cleared data back to Excel
+                    ws.DeleteRow(rowIndex + 2); // Excel rows are 1-based, and there's a header row
+                    ws.Cells["A" + (rowIndex + 2)].LoadFromDataTable(dt, false);
+                    pck.Save();
+                }
+
+                ShowGenericMessageModal(CommonConstants.ALERT_TYPE_SUCCESS, "Row cancelled successfully!");
+                ImportToGrid();
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowGenericMessageModal(CommonConstants.ALERT_TYPE_ERROR, ex.Message);
+        }
+    }
+}
+
+public class ActualAnaplan
+{
+    public string Area { get; set; }
+    public string ProcessName { get; set; }
+    public string TaskName { get; set; }
+    public string Year { get; set; }
+    public string Month { get; set; }
+}
